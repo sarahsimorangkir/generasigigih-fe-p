@@ -8,8 +8,9 @@ const artist = data.album.artists[0].name
 function App() {
   return (
     <div className="App" >
+      <div class="title"> My Playlist <span>.</span></div>
       <img src={img} className="App-logo img" alt={title}/>
-      <h1>{title}</h1>
+      <h2>{title}</h2>
       <p>Artist : {artist}</p>
       <button className='btn btn-primary'>Select</button>
     </div>

@@ -1,23 +1,17 @@
-import logo from './logo.svg';
 import './App.css';
+import "bootstrap/dist/css/bootstrap.min.css";
+import data from "./data"
 
+const img = data.album.images[0].url
+const title = data.name
+const artist = data.album.artists[0].name
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App" >
+      <img src={img} className="App-logo img" alt={title}/>
+      <h1>{title}</h1>
+      <p>Artist : {artist}</p>
+      <button className='btn btn-primary'>Select</button>
     </div>
   );
 }

@@ -28,10 +28,12 @@
   color: #61dafb;
 }
 .img{
-  height: 150px;
+  height: 180px;
+  width: 250px;
   font-weight: 150px;
-  margin-bottom: 50px;
-  margin-top: 50px;
+  margin: 0 auto;
+  padding-top: 20px;
+ 
 }
 h1{
   text-decoration: underline;
@@ -45,6 +47,17 @@ h1{
 span{
   color: hotpink;
   font-size: 1.5em;
+}
+p{
+  margin: 0px;
+}
+.playlist-item{
+  width:500px;
+  padding-bottom: 20px;
+  margin: 0 auto;
+}
+.btn{
+  margin-top: 15px;
 }
 @keyframes App-logo-spin {
   from {

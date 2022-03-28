@@ -55,10 +55,13 @@ p{
   width:500px;
   padding-bottom: 20px;
   margin: 0 auto;
+  display: flex;
+  
 }
 .btn{
   margin-top: 15px;
 }
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

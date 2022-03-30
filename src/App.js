@@ -6,7 +6,7 @@ import Playlist from "./components/Playlist/Playlist";
 function App() {
   return (
     <div className="App">
-      <h1 class="title">
+      <h1 className="title">
         My Playlist <span>.</span>
       </h1>
       <Playlist />

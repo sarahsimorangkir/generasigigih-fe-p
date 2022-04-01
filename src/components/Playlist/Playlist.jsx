@@ -8,7 +8,10 @@ const Playlist = () => {
   const [token, setToken] = useState("");
   const [searchSong, setSearchSong] = useState("");
   const [songData, setSongData] = useState([]);
+  const [selectedSongs, setSelectedSongs] = useState([]);
+  const [combineSongs, setCombineSongs] = useState([]);
 
+  //get token from url
   useEffect(() => {
     const queryString = new URL(window.location.href.replace("#", "?"))
       .searchParams;
@@ -16,6 +19,16 @@ const Playlist = () => {
     setToken(accessToken);
   }, []);
 
+  //passing songData to combineSong n add isSelected to combineSong
+  useEffect(() => {
+    const handleCombineTracks = songData.map((song) => ({
+      ...song,
+      isSelected: selectedSongs.find((data) => data === song.uri),
+    }));
+    setCombineSongs(handleCombineTracks);
+  }, [songData, selectedSongs]);
+
+  //get song data from spotify
   const getSong = async () => {
     await axios
       .get(
@@ -29,8 +42,17 @@ const Playlist = () => {
       });
   };
 
-  return songData.map((song) => {
-    const { id, album, name: title, artists } = song;
+  //handle the select state of the song
+  const handleSelect = (uri) => {
+    const selected = selectedSongs.find((song) => song === uri);
+    selected
+      ? setSelectedSongs(selectedSongs.filter((song) => song !== uri))
+      : setSelectedSongs([...selectedSongs, uri]);
+  };
+
+  return combineSongs.map((song) => {
+    const { uri, album, name: title, artists, isSelected } = song;
+    console.log(songData);
 
     return (
       <div className="playlist">
@@ -55,11 +77,14 @@ const Playlist = () => {
           </button>
         </div>
         <PlaylistItem
-          key={id}
+          key={uri}
+          uri={uri}
           img={album.images[0].url}
           title={title}
           album={album.name}
           artists={artists}
+          selectedState = {handleSelect}
+          isSelected = {isSelected}
         />
       </div>
     );

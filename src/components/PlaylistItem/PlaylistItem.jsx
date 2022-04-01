@@ -1,6 +1,14 @@
 import React from "react";
 
-export const PlaylistItem = ({ img, title, artists, album }) => {
+export const PlaylistItem = ({
+  uri,
+  img,
+  title,
+  artists,
+  album,
+  selectState,
+  isSelected,
+}) => {
   return (
     <>
       <div className=" card playlist-item">
@@ -9,7 +17,14 @@ export const PlaylistItem = ({ img, title, artists, album }) => {
           <h3>{title}</h3>
           <p>{artists.map((artist) => artist.name)}</p>
           <p>Album : {album}</p>
-          <button className="btn btn-primary">Select</button>
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              selectState(uri);
+            }}
+          >
+            {isSelected ? "DESELECT" : "SELECT"}
+          </button>
         </div>
       </div>
     </>

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { PlaylistItem } from "../PlaylistItem/PlaylistItem";
 import url from "../../helper/spotify";
 import axios from "axios";
+import CreatePlaylist from "../CreatePlaylist/CreatePlaylist";
 
 const Playlist = () => {
   const [token, setToken] = useState("");
@@ -10,14 +11,32 @@ const Playlist = () => {
   const [songData, setSongData] = useState([]);
   const [selectedSongs, setSelectedSongs] = useState([]);
   const [combineSongs, setCombineSongs] = useState([]);
+  const [userId, setUserId] = useState("");
 
   //get token from url
   useEffect(() => {
     const queryString = new URL(window.location.href.replace("#", "?"))
       .searchParams;
     const accessToken = queryString.get("access_token");
+    const getUserId = () => {
+      axios
+        .get(`https://api.spotify.com/v1/me`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        .then((response) => {
+          setUserId(response.data.id);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+    getUserId();
     setToken(accessToken);
   }, []);
+
+
 
   //passing songData to combineSong n add isSelected to combineSong
   useEffect(() => {
@@ -76,6 +95,13 @@ const Playlist = () => {
             Search
           </button>
         </div>
+        <div>
+        <CreatePlaylist
+          token={token}
+          userId={userId}
+          songUris={selectedSongs}
+        />
+      </div>
         <PlaylistItem
           key={uri}
           uri={uri}

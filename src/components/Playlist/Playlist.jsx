@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 //import { ALBUM_ITEM } from "../../constants";
+import { useSelector, useDispatch } from "react-redux";
+import { setToken } from "./reducer/tokenSlice";
 import { PlaylistItem } from "../PlaylistItem/PlaylistItem";
 import url from "../../helper/spotify";
 import axios from "axios";
 import CreatePlaylist from "../CreatePlaylist/CreatePlaylist";
 
 const Playlist = () => {
-  const [token, setToken] = useState("");
+  const token = useSelector((state) => state.token.value);
+  const dispatch = useDispatch();
   const [searchSong, setSearchSong] = useState("");
   const [songData, setSongData] = useState([]);
   const [selectedSongs, setSelectedSongs] = useState([]);
@@ -18,25 +21,9 @@ const Playlist = () => {
     const queryString = new URL(window.location.href.replace("#", "?"))
       .searchParams;
     const accessToken = queryString.get("access_token");
-    const getUserId = () => {
-      axios
-        .get(`https://api.spotify.com/v1/me`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        })
-        .then((response) => {
-          setUserId(response.data.id);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    };
-    getUserId();
-    setToken(accessToken);
+    getUserId(accessToken);
+    dispatch(setToken(accessToken));
   }, []);
-
-
 
   //passing songData to combineSong n add isSelected to combineSong
   useEffect(() => {
@@ -60,6 +47,21 @@ const Playlist = () => {
         console.log(error);
       });
   };
+  const getUserId = async (token) => {
+    await axios
+      .get(`https://api.spotify.com/v1/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setUserId(response.data.id);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
 
   //handle the select state of the song
   const handleSelect = (uri) => {
@@ -96,12 +98,12 @@ const Playlist = () => {
           </button>
         </div>
         <div>
-        <CreatePlaylist
-          token={token}
-          userId={userId}
-          songUris={selectedSongs}
-        />
-      </div>
+          <CreatePlaylist
+            token={token}
+            userId={userId}
+            songUris={selectedSongs}
+          />
+        </div>
         <PlaylistItem
           key={uri}
           uri={uri}
@@ -109,8 +111,8 @@ const Playlist = () => {
           title={title}
           album={album.name}
           artists={artists}
-          selectedState = {handleSelect}
-          isSelected = {isSelected}
+          selectedState={handleSelect}
+          isSelected={isSelected}
         />
       </div>
     );

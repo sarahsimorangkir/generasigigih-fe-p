@@ -2,10 +2,14 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setToken } from "./reducer/tokenSlice";
 import Song from "./components/Song";
-import axios from "axios";
 import url from "./helper/spotify";
 import CreatePlaylist from "./components/CreatePlaylist";
 import Search from "./components/Search";
+import {
+  getToken,
+  retrieveSongs,
+  retrieveUserId,
+} from "./services/axios.service";
 
 function App() {
   const token = useSelector((state) => state.token.value);
@@ -17,20 +21,12 @@ function App() {
   const [userId, setUserId] = useState("");
 
   useEffect(() => {
-    const queryString = new URL(window.location.href.replace("#", "?"))
-      .searchParams;
-    const accessToken = queryString.get("access_token");
-    getUserId(accessToken);
-    dispatch(setToken(accessToken));
+    getUserId();
+    dispatch(setToken(getToken()));
   }, []);
 
-  const getUserId = async (token) => {
-    await axios
-      .get(`https://api.spotify.com/v1/me`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+  const getUserId = () => {
+    retrieveUserId()  
       .then((response) => {
         setUserId(response.data.id);
       })
@@ -49,11 +45,8 @@ function App() {
   }, [songData, selectedSongs]);
 
   //get song data from spotify
-  const getSong = async () => {
-    await axios
-      .get(
-        `https://api.spotify.com/v1/search?q=${searchSong}&type=track&access_token=${token}`
-      )
+  const getSong = () => {
+    retrieveSongs(searchSong)
       .then((response) => {
         setSongData(response.data.tracks.items);
       })

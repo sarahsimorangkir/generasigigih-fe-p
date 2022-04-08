@@ -4,7 +4,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { setToken } from "./reducer/tokenSlice";
 import { PlaylistItem } from "../PlaylistItem/PlaylistItem";
 import url from "../../helper/spotify";
-import axios from "axios";
+import {
+  getToken,
+  retrieveSongs,
+  retrieveUserId,
+} from "./services/axios.service";
 import CreatePlaylist from "../CreatePlaylist/CreatePlaylist";
 
 const Playlist = () => {
@@ -18,11 +22,8 @@ const Playlist = () => {
 
   //get token from url
   useEffect(() => {
-    const queryString = new URL(window.location.href.replace("#", "?"))
-      .searchParams;
-    const accessToken = queryString.get("access_token");
-    getUserId(accessToken);
-    dispatch(setToken(accessToken));
+    getUserId();
+    dispatch(setToken(getToken()));
   }, []);
 
   //passing songData to combineSong n add isSelected to combineSong
@@ -35,33 +36,17 @@ const Playlist = () => {
   }, [songData, selectedSongs]);
 
   //get song data from spotify
-  const getSong = async () => {
-    await axios
-      .get(
-        `https://api.spotify.com/v1/search?q=${searchSong}&type=track&access_token=${token}`
-      )
-      .then((response) => {
-        setSongData(response.data.tracks.items);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-  const getUserId = async (token) => {
-    await axios
-      .get(`https://api.spotify.com/v1/me`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setUserId(response.data.id);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const getSong = () => {
+    retrieveSongs(searchSong).then((response) => {
+      setSongData(response.data.tracks.items);
+    });
   };
 
+  const getUserId = () => {
+    retrieveUserId().then((response) => {
+      setUserId(response.data.id);
+    });
+  };
 
   //handle the select state of the song
   const handleSelect = (uri) => {

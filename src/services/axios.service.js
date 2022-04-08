@@ -1,17 +1,14 @@
 import axios from "axios";
+import store from "../store";
 
-const getToken = () => {
-  const queryString = new URL(window.location.href.replace("#", "?"))
-    .searchParams;
-  const accessToken = queryString.get("access_token");
 
-  return accessToken;
-};
+const state = store.getState();
+const token = state.token.value;
 
 const instance = axios.create({
   baseURL: "https://api.spotify.com/v1",
   headers: {
-    Authorization: `Bearer ${getToken()}`,
+    Authorization: `Bearer ${token}`,
   },
 });
 
@@ -47,4 +44,4 @@ const pushSongs = ({ playlistId, songUris }) => {
   });
 };
 
-export { getToken, retrieveSongs, retrieveUserId, createPlaylist, pushSongs };
+export { retrieveSongs, retrieveUserId, createPlaylist, pushSongs };

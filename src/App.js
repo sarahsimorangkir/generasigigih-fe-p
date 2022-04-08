@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setToken } from "./reducer/tokenSlice";
 import Song from "./components/Song";
 import axios from "axios";
 import url from "./helper/spotify";
@@ -6,7 +8,8 @@ import CreatePlaylist from "./components/CreatePlaylist";
 import Search from "./components/Search";
 
 function App() {
-  const [token, setToken] = useState("");
+  const token = useSelector((state) => state.token.value);
+  const dispatch = useDispatch();
   const [searchSong, setSearchSong] = useState("");
   const [songData, setSongData] = useState([]);
   const [selectedSongs, setSelectedSongs] = useState([]);
@@ -17,23 +20,24 @@ function App() {
     const queryString = new URL(window.location.href.replace("#", "?"))
       .searchParams;
     const accessToken = queryString.get("access_token");
-    const getUserId = () => {
-      axios
-        .get(`https://api.spotify.com/v1/me`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        })
-        .then((response) => {
-          setUserId(response.data.id);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    };
-    getUserId();
-    setToken(accessToken);
+    getUserId(accessToken);
+    dispatch(setToken(accessToken));
   }, []);
+
+  const getUserId = async (token) => {
+    await axios
+      .get(`https://api.spotify.com/v1/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setUserId(response.data.id);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   //pass songData for combineSong and add isSelected
   useEffect(() => {
@@ -79,32 +83,35 @@ function App() {
           Login
         </a>
       </div>
-      <div>
-        <Search getSong={getSong} setSearchSong={setSearchSong} />
-      <div>
-        <CreatePlaylist
-          token={token}
-          userId={userId}
-          songUris={selectedSongs}
-        />
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        {combineSongs.map((song) => {
-          const { uri, name, artists, album, isSelected } = song;
-          return (
-            <Song
-              key={uri}
-              uri={uri}
-              image={album.images[0]?.url}
-              title={name}
-              album={artists[0]?.name}
-              selectState={handleSelect}
-              isSelected={isSelected}
-            />
-          );
-        })}
-      </div>
-    </div>
+      {!token ? (
+        ""
+      ) : (
+        <div>
+          <Search getSong={getSong} setSearchSong={setSearchSong} />
+          <CreatePlaylist
+            token={token}
+            userId={userId}
+            songUris={selectedSongs}
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {combineSongs.map((song) => {
+              const { uri, name, artists, album, isSelected } = song;
+              return (
+                <Song
+                  key={uri}
+                  uri={uri}
+                  image={album.images[0]?.url}
+                  title={name}
+                  album={artists[0]?.name}
+                  selectState={handleSelect}
+                  isSelected={isSelected}
+                />
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

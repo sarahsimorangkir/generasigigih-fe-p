@@ -2,23 +2,17 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Song from "../../components/Song";
 import Search from "../../components/Search";
-import { retrieveSongs, retrieveUserId } from "../../services/axios.service";
+import { retrieveSongs } from "../../services/axios.service";
 
 import Form from "../../components/Form";
 
 const CreatePlaylist = () => {
   const token = useSelector((state) => state.token.value);
-
-  const [userId, setUserId] = useState("");
   const [searchSong, setSearchSong] = useState("");
   const [songData, setSongData] = useState([]);
   const [selectedSongs, setSelectedSongs] = useState([]);
   const [combineSongs, setCombineSongs] = useState([]);
 
-  // get the token from the url
-  useEffect(() => {
-    getUserId();
-  }, []);
 
   // basically pass songData to combineSongs and add isSelected to combineSongs
   useEffect(() => {
@@ -31,20 +25,9 @@ const CreatePlaylist = () => {
 
   // a function to get song data from spotify
   const getSong = () => {
-    retrieveSongs(searchSong)
+    retrieveSongs(searchSong, token)
       .then((response) => {
         setSongData(response.data.tracks.items);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  // a function to get the user id
-  const getUserId = () => {
-    retrieveUserId()
-      .then((response) => {
-        setUserId(response.data.id);
       })
       .catch((error) => {
         console.log(error);
@@ -66,8 +49,7 @@ const CreatePlaylist = () => {
         </h2>
       </div>
       <Search getSong={getSong} setSearchSong={setSearchSong} />
-      <Form token={token} userId={userId} songUris={selectedSongs} />
-
+      <Form songUris={selectedSongs} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {combineSongs.map((song) => {
           const { uri, name, artists, album, isSelected } = song;

@@ -17,21 +17,31 @@ const Form = ({ songUris }) => {
 
   // run addSong function when playlistId is set
   useEffect(() => {
+    const getUserId = () => {
+      retrieveUserId(token)
+        .then((response) => {
+          setUserId(response.data.id);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
+    // add songs to the playlist
+    const addSongs = () => {
+      pushSongs(playlistId, songUris, token)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
     if (playlistId) {
       addSongs();
     }
     getUserId();
-  }, [playlistId]);
-
-  const getUserId = () => {
-    retrieveUserId(token)
-      .then((response) => {
-        setUserId(response.data.id);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  }, [playlistId, songUris, token]);
 
   // get the form data
   const handleForm = (e) => {
@@ -58,21 +68,10 @@ const Form = ({ songUris }) => {
     }
   };
 
-  // add songs to the playlist
-  const addSongs = () => {
-    pushSongs(playlistId, songUris, token)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
   return (
     <form onSubmit={handleSubmit}>
       <div className="flex justify-center">
-      <div className="mb-3 xl:w-96 bg-neutral-800 p-5 rounded-lg">
+        <div className="mb-3 xl:w-96 bg-neutral-800 p-5 rounded-lg">
           <div className="flex-col w-full mb-4">
             <label htmlFor="title" className="text-white text-md font-medium">
               Title

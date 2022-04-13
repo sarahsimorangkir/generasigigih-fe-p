@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import Song from "../../components/Song";
 import Search from "../../components/Search";
 import { retrieveSongs } from "../../services/axios.service";
-
+import { Center, Text, SimpleGrid, Box } from "@chakra-ui/react";
 import Form from "../../components/Form";
 
 const CreatePlaylist = () => {
@@ -12,7 +12,6 @@ const CreatePlaylist = () => {
   const [songData, setSongData] = useState([]);
   const [selectedSongs, setSelectedSongs] = useState([]);
   const [combineSongs, setCombineSongs] = useState([]);
-
 
   // basically pass songData to combineSongs and add isSelected to combineSongs
   useEffect(() => {
@@ -42,31 +41,33 @@ const CreatePlaylist = () => {
       : setSelectedSongs([...selectedSongs, uri]);
   };
   return (
-    <div>
-      <div className="text-center">
-        <h2 className="text-white text-3xl mb-5 font-semibold">
+    <>
+      <Center>
+        <Text fontSize="2xl" fontWeight="semibold">
           Create Playlist
-        </h2>
-      </div>
+        </Text>
+      </Center>
       <Search getSong={getSong} setSearchSong={setSearchSong} />
       <Form songUris={selectedSongs} />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <SimpleGrid columns={{ sm: 1, md: 2 }} spacing="5" py="5">
         {combineSongs.map((song) => {
           const { uri, name, artists, album, isSelected } = song;
           return (
-            <Song
-              key={uri}
-              uri={uri}
-              image={album.images[0]?.url}
-              title={name}
-              album={artists[0]?.name}
-              selectState={handleSelect}
-              isSelected={isSelected}
-            />
+            <Box w="100%">
+              <Song
+                key={uri}
+                uri={uri}
+                image={album.images[0]?.url}
+                title={name}
+                album={artists[0]?.name}
+                selectState={handleSelect}
+                isSelected={isSelected}
+              />
+            </Box>
           );
         })}
-      </div>
-    </div>
+      </SimpleGrid>
+    </>
   );
 };
 

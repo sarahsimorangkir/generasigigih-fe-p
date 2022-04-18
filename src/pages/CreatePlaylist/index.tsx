@@ -1,25 +1,30 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import Song from "../../components/Song";
-import Search from "../../components/Search";
-import { retrieveSongs } from "../../services/axios.service";
-import { Center, Text, SimpleGrid, Box } from "@chakra-ui/react";
-import Form from "../../components/Form";
+import { useAppSelector } from "hooks/hooks";
+import { Center, Text, SimpleGrid } from "@chakra-ui/react";
+import Song from "components/Song";
+import Search from "components/Search";
+import { retrieveSongs } from "services/axios.service";
+import Form from "components/Form";
+import { songDataInterface, selectedInterface } from "global/interfaces";
 
 const CreatePlaylist = () => {
-  const token = useSelector((state) => state.token.value);
+  const token = useAppSelector((state) => state.token.value);
   const [searchSong, setSearchSong] = useState("");
-  const [songData, setSongData] = useState([]);
-  const [selectedSongs, setSelectedSongs] = useState([]);
-  const [combineSongs, setCombineSongs] = useState([]);
+  const [songData, setSongData] = useState<songDataInterface[]>([]);
+  const [selectedSongs, setSelectedSongs] = useState<
+    selectedInterface["uri"][]
+  >([]);
+  const [combineSongs, setCombineSongs] = useState<songDataInterface[]>([]);
 
   // basically pass songData to combineSongs and add isSelected to combineSongs
   useEffect(() => {
-    const handleCombineTracks = songData.map((song) => ({
+    const handleCombineSongs = songData.map((song: songDataInterface) => ({
       ...song,
-      isSelected: selectedSongs.find((data) => data === song.uri),
+      isSelected: selectedSongs.find((data) => data === song.uri)
+        ? true
+        : false,
     }));
-    setCombineSongs(handleCombineTracks);
+    setCombineSongs(handleCombineSongs);
   }, [songData, selectedSongs]);
 
   // a function to get song data from spotify
@@ -34,7 +39,7 @@ const CreatePlaylist = () => {
   };
 
   // a function to handle the select state of the song
-  const handleSelect = (uri) => {
+  const handleSelect = (uri : string) => {
     const selected = selectedSongs.find((song) => song === uri);
     selected
       ? setSelectedSongs(selectedSongs.filter((song) => song !== uri))
@@ -53,17 +58,15 @@ const CreatePlaylist = () => {
         {combineSongs.map((song) => {
           const { uri, name, artists, album, isSelected } = song;
           return (
-            <Box w="100%">
-              <Song
-                key={uri}
-                uri={uri}
-                image={album.images[0]?.url}
-                title={name}
-                album={artists[0]?.name}
-                selectState={handleSelect}
-                isSelected={isSelected}
-              />
-            </Box>
+            <Song
+            key={uri}
+            uri={uri}
+            image={album.images[0]?.url}
+            title={name}
+            album={artists[0]?.name}
+            selectState={handleSelect}
+            isSelected={isSelected}
+          />
           );
         })}
       </SimpleGrid>

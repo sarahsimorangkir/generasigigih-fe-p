@@ -6,7 +6,9 @@ import {
   Input,
   InputRightElement,
 } from "@chakra-ui/react";
-const Search = ({ setSearchSong, getSong }) => {
+import { searchInterface } from "global/interfaces";
+
+const Search = ({ setSearchSong, getSong } : searchInterface) => {
     return (
       <>
       <Center>

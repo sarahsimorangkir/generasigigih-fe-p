@@ -1,15 +1,15 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { setToken } from "../../reducer/tokenSlice";
-import url from "../../helper/spotify";
-import logo from "../../assets/logo-spotify.png";
+import { setToken } from "reducer/tokenSlice";
+import { useAppDispatch } from "hooks/hooks";
+import url from "helper/spotify";
+import logo from "assets/logo-spotify.png";
 import { Center, Image, Link, Box } from "@chakra-ui/react";
 
 const Login = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(setToken(getToken()));
+    dispatch(setToken(getToken() || ""));
   }, [dispatch]);
 
   const getToken = () => {

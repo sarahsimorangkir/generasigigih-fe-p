@@ -1,5 +1,14 @@
 import { Box, Button, Spacer, Flex, Image, Text } from "@chakra-ui/react";
-const Song = ({ uri, image, title, album, selectState, isSelected }) => {
+import { songInterface } from "global/interfaces";
+
+const Song = ({
+  uri,
+  image,
+  title,
+  album,
+  selectState,
+  isSelected,
+}: songInterface) => {
   return (
     <>
       <Box bgColor="gray.700" borderRadius="md">

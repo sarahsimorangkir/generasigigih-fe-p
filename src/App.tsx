@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useAppSelector } from "hooks/hooks";
 import {
   BrowserRouter as Router,
   Route,
@@ -11,18 +11,18 @@ import NotFound from "./pages/NotFound";
 import { Box } from "@chakra-ui/react";
 
 function App() {
-  const token = useSelector((state) => state.token.value);
+  const token = useAppSelector((state) => state.token.value);
 
   return (
-   <>
-    <Box p="5">
+    <>
+      <Box p="5">
         <Router>
           <Switch>
             <Route exact path="/">
               {!token ? <Login /> : <Redirect to="/create-playlist" />}
             </Route>
             <Route path="/create-playlist">
-              <CreatePlaylist />
+              {!token ? <Redirect exact to="/" /> : <CreatePlaylist />}
             </Route>
             <Route path="*">
               <NotFound />
@@ -30,7 +30,7 @@ function App() {
           </Switch>
         </Router>
       </Box>
-   </>
+    </>
   );
 }
 

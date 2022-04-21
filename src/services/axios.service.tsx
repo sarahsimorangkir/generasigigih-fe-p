@@ -9,7 +9,7 @@ const instance = axios.create({
   },
 });
 
-const retrieveSongs = (searchSong : string, token :string) => {
+const retrieveSongs = (searchSong: string, token: string) => {
   return instance.get(`/search`, {
     params: {
       q: searchSong,
@@ -21,7 +21,7 @@ const retrieveSongs = (searchSong : string, token :string) => {
   });
 };
 
-const retrieveUserId = (token:string) => {
+const retrieveUserId = (token: string) => {
   return instance.get(`/me`, {
     headers: {
       Authorization: `Bearer ${token}`,

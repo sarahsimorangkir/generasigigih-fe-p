@@ -12,7 +12,6 @@ import {
   Box,
   FormControl,
   FormLabel,
-  FormHelperText,
   Input,
 } from "@chakra-ui/react";
 
@@ -25,7 +24,7 @@ const Form = ({ songUris }: songUrisInterface) => {
     description: "",
   });
 
-  // run addSong function when playlistId is set
+  //run addSong function when playlistId is set
   useEffect(() => {
     const getUserId = () => {
       retrieveUserId(token)
@@ -86,25 +85,23 @@ const Form = ({ songUris }: songUrisInterface) => {
             <FormLabel htmlFor="title">Title</FormLabel>
             <Input
               type="text"
-              placeholder="Title"
+              placeholder="Playlist Title"
               id="title"
               name="title"
               value={form.title}
               onChange={handleForm}
             />
-            <FormHelperText>Your playlist title</FormHelperText>
           </FormControl>
           <FormControl>
             <FormLabel htmlFor="title">Description</FormLabel>
             <Input
               type="text"
-              placeholder="Description"
+              placeholder="Playlist Description"
               id="description"
               name="description"
               value={form.description}
               onChange={handleForm}
             />
-            <FormHelperText>Your playlist description</FormHelperText>
           </FormControl>
           <Button mt="3" w="100%" id="submit" type="submit" colorScheme="green">
             Create

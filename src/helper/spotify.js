@@ -1,5 +1,5 @@
 var client_id = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
-var redirect_uri = "https://generasigigih-fe-p-git-deploy-sarahsimorangkir.vercel.app/";
+var redirect_uri = "https://generasigigih-fe-p.vercel.app/";
 
 var state = "SARAHSIMORANGKIR";
 

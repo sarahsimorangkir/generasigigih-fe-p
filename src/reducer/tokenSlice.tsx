@@ -7,7 +7,7 @@ const initialState: tokenState = {
 
 export const tokenSlice = createSlice({
   name: "token",
-  initialState,
+ initialState,
   reducers: {
     setToken: (state, action: PayloadAction<string>) => {
       state.value = action.payload;

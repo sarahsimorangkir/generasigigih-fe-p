@@ -16,7 +16,7 @@ const CreatePlaylist = () => {
   >([]);
   const [combineSongs, setCombineSongs] = useState<songDataInterface[]>([]);
 
-  //pass songData to combineSongs and add isSelected to combineSongs
+  // basically pass songData to combineSongs and add isSelected to combineSongs
   useEffect(() => {
     const handleCombineSongs = songData.map((song: songDataInterface) => ({
       ...song,
@@ -27,7 +27,7 @@ const CreatePlaylist = () => {
     setCombineSongs(handleCombineSongs);
   }, [songData, selectedSongs]);
 
-  //get song data from spotify
+  // a function to get song data from spotify
   const getSong = () => {
     retrieveSongs(searchSong, token)
       .then((response) => {
@@ -38,8 +38,8 @@ const CreatePlaylist = () => {
       });
   };
 
-  //handle the select state of the song
-  const handleSelect = (uri: string) => {
+  // a function to handle the select state of the song
+  const handleSelect = (uri : string) => {
     const selected = selectedSongs.find((song) => song === uri);
     selected
       ? setSelectedSongs(selectedSongs.filter((song) => song !== uri))
@@ -48,7 +48,7 @@ const CreatePlaylist = () => {
   return (
     <>
       <Center>
-        <Text fontSize="2xl" pb="5" fontWeight="semibold">
+        <Text fontSize="2xl" fontWeight="semibold">
           Create Playlist
         </Text>
       </Center>
@@ -59,14 +59,14 @@ const CreatePlaylist = () => {
           const { uri, name, artists, album, isSelected } = song;
           return (
             <Song
-              key={uri}
-              uri={uri}
-              image={album.images[0]?.url}
-              title={name}
-              album={artists[0]?.name}
-              selectState={handleSelect}
-              isSelected={isSelected}
-            />
+            key={uri}
+            uri={uri}
+            image={album.images[0]?.url}
+            title={name}
+            album={artists[0]?.name}
+            selectState={handleSelect}
+            isSelected={isSelected}
+          />
           );
         })}
       </SimpleGrid>

@@ -1,5 +1,5 @@
 var client_id = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
-var redirect_uri =process.env.REACT_APP_LOCAL_URL  || process.env.REACT_APP_SPOTIFY_API_BASE_URL;
+var redirect_uri = "http://localhost:3000"
 
 var state = "SARAHSIMORANGKIR";
 

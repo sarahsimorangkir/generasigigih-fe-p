@@ -12,20 +12,23 @@ import {
   Box,
   FormControl,
   FormLabel,
-  FormHelperText,
   Input,
+  useToast,
 } from "@chakra-ui/react";
+import Dialog from "components/Dialog";
 
 const Form = ({ songUris }: songUrisInterface) => {
   const token = useAppSelector((state) => state.token.value);
   const [playlistId, setPlaylistId] = useState("");
   const [userId, setUserId] = useState("");
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [form, setForm] = useState({
     title: "",
     description: "",
   });
+  const toast = useToast();
 
-  // run addSong function when playlistId is set
+  //run addSong function when playlistId is set
   useEffect(() => {
     const getUserId = () => {
       retrieveUserId(token)
@@ -62,7 +65,7 @@ const Form = ({ songUris }: songUrisInterface) => {
   // handle form submit
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (form.title.length > 10) {
+    if (form.title.length >= 10) {
       createPlaylist(userId, form.title, form.description, token)
         .then((response) => {
           setPlaylistId(response.data.id);
@@ -70,15 +73,21 @@ const Form = ({ songUris }: songUrisInterface) => {
         .catch((error) => {
           console.log(error);
         });
-
+        setDialogOpen(true);
       setForm({ title: "", description: "" });
-      alert("Successfully created playlist");
     } else {
-      alert("Title must be more than 10 characters");
+      toast({
+        title: "Error",
+        description: "Title must be at least 10 characters",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 
   return (
+    <>
     <Center>
       <Box w="sm">
         <form onSubmit={handleSubmit}>
@@ -86,25 +95,23 @@ const Form = ({ songUris }: songUrisInterface) => {
             <FormLabel htmlFor="title">Title</FormLabel>
             <Input
               type="text"
-              placeholder="Title"
+              placeholder="Playlist Title"
               id="title"
               name="title"
               value={form.title}
               onChange={handleForm}
             />
-            <FormHelperText>Your playlist title</FormHelperText>
           </FormControl>
           <FormControl>
             <FormLabel htmlFor="title">Description</FormLabel>
             <Input
               type="text"
-              placeholder="Description"
+              placeholder="Playlist Description"
               id="description"
               name="description"
               value={form.description}
               onChange={handleForm}
             />
-            <FormHelperText>Your playlist description</FormHelperText>
           </FormControl>
           <Button mt="3" w="100%" id="submit" type="submit" colorScheme="green">
             Create
@@ -112,6 +119,8 @@ const Form = ({ songUris }: songUrisInterface) => {
         </form>
       </Box>
     </Center>
+     <Dialog total={songUris.length} showConfirmation={dialogOpen} />
+     </>
   );
 };
 

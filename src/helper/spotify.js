@@ -5,7 +5,7 @@ var redirect_uri = "http://localhost:3000/"
 var state = "SARAHSIMORANGKIR";
 
 localStorage.setItem("TOKEN", state);
-var scope = "playlist-modify-private user-read-private";
+var scope = "playlist-modify-private user-read-private playlist-read-private";
 
 var url = "https://accounts.spotify.com/authorize";
 url += "?response_type=token";

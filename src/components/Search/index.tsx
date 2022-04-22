@@ -8,15 +8,15 @@ import {
 } from "@chakra-ui/react";
 import { searchInterface } from "global/interfaces";
 
-const Search = ({ setSearchSong, getSong } : searchInterface) => {
-    return (
-      <>
+const Search = ({ setSearchSong, getSong }: searchInterface) => {
+  return (
+    <>
       <Center>
         <Box w="sm">
           <InputGroup mb="3">
             <Input
               type="text"
-              placeholder="Search"
+              placeholder="Search here..."
               aria-label="Search"
               onChange={(e) => setSearchSong(e.target.value)}
             />
@@ -34,7 +34,7 @@ const Search = ({ setSearchSong, getSong } : searchInterface) => {
         </Box>
       </Center>
     </>
-    );
-  };
-  
-  export default Search;
+  );
+};
+
+export default Search;

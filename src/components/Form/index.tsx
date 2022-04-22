@@ -65,7 +65,7 @@ const Form = ({ songUris }: songUrisInterface) => {
   // handle form submit
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (form.title.length > 10) {
+    if (form.title.length >= 10) {
       createPlaylist(userId, form.title, form.description, token)
         .then((response) => {
           setPlaylistId(response.data.id);
@@ -75,11 +75,10 @@ const Form = ({ songUris }: songUrisInterface) => {
         });
         setDialogOpen(true);
       setForm({ title: "", description: "" });
-      alert("Successfully created playlist");
     } else {
       toast({
         title: "Error",
-        description: "Title must be more than 10 characters",
+        description: "Title must be at least 10 characters",
         status: "error",
         duration: 3000,
         isClosable: true,
